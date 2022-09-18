@@ -57,20 +57,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   validateAnswer: async (answerId: number) => {
     const result = await QuestionService.validateAnswer(answerId)
+
     if (result) {
       const currentQuestion = get().questions[get().currentQuestion - 1]
       set({ score: get().score + currentQuestion.reward })
 
       if (get().currentQuestion < get().maxQuestions) {
         set({ currentQuestion: get().currentQuestion + 1 })
-      } else {
+        return
+      }
+
+      try {
         await get().loadNextCategory()
         await get().loadQuestions()
         set({ currentQuestion: 1 })
+      } catch (error: any) {
+        if (error?.response?.status === 404) {
+          get().endGame()
+        }
       }
-    } else {
-      set({ gameOver: true })
+
+      return
     }
+
+    get().endGame()
   },
 
   reset: () => {

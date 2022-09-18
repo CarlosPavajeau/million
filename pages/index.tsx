@@ -1,23 +1,10 @@
 import type { NextPage } from 'next'
-import {
-  Button,
-  Col,
-  Container,
-  Row,
-  Spacer,
-  styled,
-  Text
-} from '@nextui-org/react'
-
-// Container than occupies 100% of the viewport and centers its content vertically
-const StyledContainer = styled(Container, {
-  height: '100vh',
-  alignItems: 'center',
-})
+import NextLink from 'next/link'
+import { Button, Col, Row, Spacer, Text } from '@nextui-org/react'
 
 const Home: NextPage = () => {
   return (
-    <StyledContainer lg alignItems="center" display="flex">
+    <>
       <Col>
         <Row justify="center">
           <Text h1>Bienvenido</Text>
@@ -26,10 +13,14 @@ const Home: NextPage = () => {
         <Spacer y={3}/>
 
         <Row justify="center">
-          <Button size="xl" color="gradient" shadow>Iniciar juego</Button>
+          <NextLink href="/game" passHref>
+            <Button size="xl" color="gradient" shadow as="a">
+              Iniciar juego
+            </Button>
+          </NextLink>
         </Row>
       </Col>
-    </StyledContainer>
+    </>
   )
 }
 

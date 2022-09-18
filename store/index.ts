@@ -19,6 +19,8 @@ type GameStore = {
   loadNextCategory: () => Promise<void>
 
   loadQuestions: () => Promise<void>
+
+  validateAnswer: (answerId: number) => Promise<void>
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -32,6 +34,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   loadFirstCategory: async () => {
     const category = await CategoryService.fetchFirst()
     set({ category })
+
+    await get().loadQuestions()
   },
 
   loadNextCategory: async () => {
@@ -51,13 +55,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   validateAnswer: async (answerId: number) => {
     const result = await QuestionService.validateAnswer(answerId)
     if (result) {
-      const currentQuestion = get().questions[get().currentQuestion]
+      const currentQuestion = get().questions[get().currentQuestion - 1]
       set({ score: get().score + currentQuestion.reward })
 
       if (get().currentQuestion < get().maxQuestions) {
         set({ currentQuestion: get().currentQuestion + 1 })
       } else {
         await get().loadNextCategory()
+        await get().loadQuestions()
+        set({ currentQuestion: 1 })
       }
     } else {
       set({ gameOver: true })
@@ -94,6 +100,8 @@ type GameState = {
 
   currentQuestion: number
   maxQuestions: number
+
+  gameOver: boolean
 }
 
 export const useGameState = () =>
@@ -101,4 +109,12 @@ export const useGameState = () =>
     score: state.score,
     currentQuestion: state.currentQuestion,
     maxQuestions: state.maxQuestions,
+    gameOver: state.gameOver,
   }))
+
+export const useCurrentQuestion = () => {
+  const currentQuestion = useGameStore(x => x.currentQuestion)
+  const questions = useGameStore(x => x.questions)
+
+  return questions[currentQuestion - 1]
+}

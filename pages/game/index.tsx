@@ -1,11 +1,12 @@
 import { Button, Col, Row, Spacer, Text } from '@nextui-org/react'
 import GameState from '../../components/game-state'
 import QuestionView from '../../components/question'
-import { useGameState } from '../../store'
+import { useGameState, useGameStore } from '../../store'
 import NextLink from 'next/link'
 
 const GameView = () => {
-  const { score, currentQuestion, gameOver } = useGameState()
+  const { score, gameOver } = useGameState()
+  const reset = useGameStore(x => x.reset)
 
   return (
     <Col>
@@ -38,9 +39,7 @@ const GameView = () => {
           <Spacer y={1} />
 
           <Row justify="center">
-            <NextLink href="/" passHref>
-              <Button as="a">Reiniciar</Button>
-            </NextLink>
+            <Button onClick={reset}>Reiniciar</Button>
           </Row>
         </>
       )}

@@ -21,6 +21,9 @@ type GameStore = {
   loadQuestions: () => Promise<void>
 
   validateAnswer: (answerId: number) => Promise<void>
+
+  reset: () => void
+  endGame: () => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -79,6 +82,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
       questions: [],
       gameOver: false,
     })
+  },
+
+  endGame: () => {
+    set({ gameOver: true })
   },
 }))
 

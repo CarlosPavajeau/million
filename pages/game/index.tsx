@@ -2,7 +2,7 @@ import { Button, Col, Row, Spacer, Text } from '@nextui-org/react'
 import GameState from '../../components/game-state'
 import QuestionView from '../../components/question'
 import { useGameState, useGameStore } from '../../store'
-import NextLink from 'next/link'
+import Fireworks from '../../components/fireworks'
 
 const GameView = () => {
   const { score, gameOver } = useGameState()
@@ -41,6 +41,10 @@ const GameView = () => {
           <Row justify="center">
             <Button onClick={reset}>Reiniciar</Button>
           </Row>
+
+          {
+            score > 0 && (<Fireworks />)
+          }
         </>
       )}
     </Col>

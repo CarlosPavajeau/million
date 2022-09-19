@@ -80,6 +80,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       return
     }
 
+    set({ score: 0 })
     get().endGame()
   },
 

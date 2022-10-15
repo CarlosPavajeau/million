@@ -51,7 +51,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const category = get().category
     if (category) {
       const questions = await QuestionService.fetchByCategory(category.id)
-      set({ questions })
+      set({ questions, maxQuestions: questions.length })
     }
   },
 
